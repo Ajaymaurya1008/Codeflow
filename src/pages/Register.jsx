@@ -1,11 +1,13 @@
 /* eslint-disable react/no-unknown-property */
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import 'react-toastify/dist/ReactToastify.css'
 import { toast } from 'react-toastify'
+import {v4} from "uuid"
 
 const Register = () => {
 
+    const navigate = useNavigate()
     const [user,setUser] = useState({
         username:"",
         roomid:""
@@ -17,10 +19,25 @@ const Register = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        if(user.username && user.roomid){
         console.log(user)
         setUser({username:"",roomid:""})
         toast.success(" Joined Successfully.")
+            navigate(`/edit/${user.roomid}`, {state: { username: user.username }})
+        }else{
+            toast.error("Please fill all the fields.")
+        }
+        
     }
+    
+    const createRoom = (e) => {
+        e.preventDefault()
+        const id  = v4()
+        setUser({...user,roomid:id})
+        toast.success("Created a new Room.")
+
+    }
+
 
     return (
         <main className="w-full h-screen flex flex-col items-center justify-center px-4">
@@ -37,19 +54,6 @@ const Register = () => {
                 >
                     <div>
                         <label className="font-medium">
-                            Username 
-                        </label>
-                        <input
-                            name="username"
-                            value={user.username}
-                            onChange={handleChange}
-                            type="text" 
-                            required
-                            className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
-                        />
-                    </div>
-                    <div>
-                        <label className="font-medium">
                             Room ID
                         </label>
                         <input
@@ -58,7 +62,20 @@ const Register = () => {
                             onChange={handleChange}
                             type="text"
                             required
-                            className="w-full mt-2 px-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                            className="w-full bg-[#2D394B] mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
+                        />
+                    </div>
+                    <div>
+                        <label className="font-medium">
+                            Username
+                        </label>
+                        <input
+                            name="username"
+                            value={user.username}
+                            onChange={handleChange}
+                            type="text"
+                            required
+                            className="w-full bg-[#2D394B] mt-2 px-3 py-2 text-white bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg"
                         />
                     </div>
                     <button
@@ -68,7 +85,7 @@ const Register = () => {
                         Join Room
                     </button>
                 </form>
-                <p className="text-center"> Dont have an invite then create  <Link to="/" className="font-medium text-indigo-600 hover:text-indigo-500">Join Room</Link></p>
+                <p className="text-center"> Dont have an invite then   <Link to="/" onClick={createRoom} className="font-medium text-indigo-600 hover:text-indigo-500">Create Room</Link></p>
             </div>
         </main>
     )
