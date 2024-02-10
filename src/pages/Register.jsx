@@ -10,7 +10,7 @@ const Register = () => {
     const navigate = useNavigate()
     const [user,setUser] = useState({
         username:"",
-        roomid:""
+        roomId:""
     })
 
     const handleChange = (e) => {
@@ -19,11 +19,11 @@ const Register = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        if(user.username && user.roomid){
+        if(user.username && user.roomId){
         console.log(user)
-        setUser({username:"",roomid:""})
+        setUser({username:"",roomId:""})
         toast.success(" Joined Successfully.")
-            navigate(`/edit/${user.roomid}`, {state: { username: user.username }})
+            navigate(`/edit/${user.roomId}`, {state: { username: user.username }})
         }else{
             toast.error("Please fill all the fields.")
         }
@@ -33,7 +33,7 @@ const Register = () => {
     const createRoom = (e) => {
         e.preventDefault()
         const id  = v4()
-        setUser({...user,roomid:id})
+        setUser({...user,roomId:id})
         toast.success("Created a new Room.")
 
     }
@@ -57,8 +57,8 @@ const Register = () => {
                             Room ID
                         </label>
                         <input
-                            name="roomid"
-                            value={user.roomid}
+                            name="roomId"
+                            value={user.roomId}
                             onChange={handleChange}
                             type="text"
                             required

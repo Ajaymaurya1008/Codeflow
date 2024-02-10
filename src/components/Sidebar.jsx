@@ -7,7 +7,7 @@ const Sidebar = ({ client }) => {
 
     return (
         <>
-            <nav className="fixed top-0 left-0 w-20 h-full bg-slate-800  space-y-8">
+            <nav className="z-999 w-20 h-full bg-slate-800  space-y-8">
                 <div className="flex flex-col h-full">
                     <div className="h-20 flex items-center justify-center px-8">
                         <a className="flex-none">

@@ -1,4 +1,6 @@
-import  { useEffect, useRef } from 'react';
+/* eslint-disable no-unreachable */
+/* eslint-disable no-unused-vars */
+import { useEffect, useRef } from 'react';
 import Codemirror from 'codemirror';
 import 'codemirror/lib/codemirror.css';
 import 'codemirror/theme/dracula.css';
@@ -7,11 +9,10 @@ import 'codemirror/addon/edit/closetag';
 import 'codemirror/addon/edit/closebrackets';
 
 const Code = () => {
-    const editorRef = useRef(null);
+    // const editorRef = useRef(null);
     useEffect(() => {
         async function init() {
-            editorRef.current = Codemirror.fromTextArea(
-                document.getElementById('realtimeEditor'),
+            Codemirror.fromTextArea(document.getElementById('realtimeEditor'),
                 {
                     mode: { name: 'javascript', json: true },
                     theme: 'dracula',
@@ -25,7 +26,7 @@ const Code = () => {
     }, []);
 
 
-    return <textarea id="realtimeEditor"></textarea>;
+    return <textarea className='resize' id="realtimeEditor"></textarea>;
 };
 
 export default Code;

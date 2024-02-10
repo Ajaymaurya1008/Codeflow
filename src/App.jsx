@@ -9,7 +9,7 @@ const router = createBrowserRouter([
     errorElement: <h1>error</h1>,
   },
   {
-    path: "/edit",
+    path: "/edit/:roomId",
     element: <Editor/>,
     errorElement: <h1>error</h1>,
   },
