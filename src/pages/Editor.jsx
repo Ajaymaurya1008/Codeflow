@@ -8,14 +8,12 @@ import { useLocation, useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 const Editor = () => {
-  const [client, setClient] = useState([
-    { socketID: 1, username: "Ajay Maurya" },
-    { socketID: 2, username: "Ram Maurya" },
-  ]);
+  const [client, setClient] = useState();
 
   const socketRef = useRef(null);
   const location = useLocation();
   const reactNavigator = useNavigate();
+  const codeRef = useRef();
   const { roomId } = useParams();
 
   useEffect(() => {
@@ -40,39 +38,53 @@ const Editor = () => {
       socketRef.current.on(
         ACTIONS.JOINED,
         ({ clients, username, socketId }) => {
+          console.log(location.state.username);
           if (username !== location.state?.username) {
             toast.success(`${username} joined the room`);
             console.log(username);
           }
           setClient(clients);
+          socketRef.current.emit(ACTIONS.SYNC_CODE, {
+            code: codeRef.current,
+            socketId,
+          });
         }
       );
 
       // Listening for disconnected
-      socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketID, username }) => {
-        toast.success(`${username} left the room `);
+      socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
+        if (username !== location.state?.username) {
+          toast.success(`${username} left the room.`);
+        }
         setClient((prev) => {
-          return prev.filter((client) => client.socketID !== socketID);
+          return prev.filter((client) => client.socketId !== socketId);
         });
       });
     };
     init();
 
-    // return () => {
-    //   socketRef.current.disconnect();
-    //   socketRef.current.off(ACTIONS.JOINED); // Remove listener for JOINED event
-    //   socketRef.current.off(ACTIONS.DISCONNECTED); // Remove listener for DISCONNECTED event
-    // };
-
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current.off(ACTIONS.JOINED);
+        socketRef.current.off(ACTIONS.DISCONNECTED);
+      }
+    };
   }, []);
 
   return (
     <div className="flex">
       <div className="">
-        <Sidebar client={client} />
+        <Sidebar client={client || []} />
       </div>
       <div className="grow">
-        <Code />
+        <Code
+          socketRef={socketRef}
+          roomId={roomId}
+          onCodeChange={(code) => {
+            codeRef.current = code;
+          }}
+        />
       </div>
     </div>
   );

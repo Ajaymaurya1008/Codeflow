@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "start": "node --watch server.js",
+    "start": "nodemon server.js",
     "build": "vite build",
     "server:dev": "nodemon server.js",
     "server:prod": "node server.js",
@@ -16,6 +16,7 @@
     "codemirror": "^5.65.16",
     "dotenv": "^16.4.1",
     "express": "^4.18.2",
+    "nodemon": "^3.0.3",
     "radix-ui": "^1.0.1",
     "react": "^18.2.0",
     "react-avatar": "^5.0.3",
