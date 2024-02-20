@@ -1,6 +1,3 @@
-// server.js
-
-/* eslint-disable no-undef */
 const express = require("express");
 const app = express();
 const http = require("http");
@@ -12,7 +9,7 @@ const path = require("path");
 const server = http.createServer(app);
 const io = new Server(server);
 
-// Define the maps here
+
 const userToSocketMap = {};
 const socketToUserMap = {};
 
@@ -21,14 +18,13 @@ const socketToUserMap = {};
 //   res.sendFile(path.join(__dirname, "dist", "index.html"));
 // });
 
-// Your existing code continues...
 
 const getAllConnectedClients = (roomId) => {
   return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map(
     (socketId) => {
       return {
         socketId,
-        username: socketToUserMap[socketId], // Corrected variable name
+        username: socketToUserMap[socketId], 
       };
     }
   );
