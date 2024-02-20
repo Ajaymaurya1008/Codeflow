@@ -31,7 +31,7 @@ const Sidebar = ({ client }) => {
           <div className="h-20 flex items-center justify-center px-8">
             <a className="flex-none">
               <img
-                src="https://floatui.com/logo-letter.png"
+                src="https://assets-global.website-files.com/6390ccac206b2dabb754420e/63971a2dca8d8c5bb2039390_porfolio-bg.svg"
                 width={35}
                 className="mx-auto"
               />
