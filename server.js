@@ -16,9 +16,9 @@ const io = new Server(server);
 const userToSocketMap = {};
 const socketToUserMap = {};
 
-app.use(express.static("build"));
+app.use(express.static("dist"));
 app.use((req, res, next) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
 // Your existing code continues...
