@@ -4,10 +4,14 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite & nodemon server.js",
-    "build": "vite build",
-    "start": "node server.js",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
+    "dev": "vite",
+    "start:front": "vite",
+    "start": "nodemon server.js",
+    "build": "vite build && npm server:prod",
+    "server:dev": "nodemon server.js",
+    "server:prod": "node server.js",
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
   },
   "dependencies": {
     "codemirror": "^5.65.16",
