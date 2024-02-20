@@ -5,18 +5,24 @@ import http from "http";
 import { Server } from "socket.io";
 import { ACTIONS } from "./src/Actions.js";
 import { config } from "dotenv";
+import path from "path";
 
 const server = http.createServer(app);
 const io = new Server(server);
+
+app.use(express.static("build"));
+app.use((req, res, next) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 const userSocketMap = {};
 
 const getAllConnectedClients = (roomId) => {
   return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map(
-    (socketID) => {
+    (socketId) => {
       return {
-        socketID,
-        username: userSocketMap[socketID],
+        socketId,
+        username: userSocketMap[socketId],
       };
     }
   );
@@ -30,11 +36,11 @@ io.on("connection", (socket) => {
     socket.join(roomId);
     const clients = getAllConnectedClients(roomId);
     console.log(clients);
-    clients.forEach(({ socketID }) => {
-      io.to(socketID).emit(ACTIONS.JOINED, {
+    clients.forEach(({ socketId }) => {
+      io.to(socketId).emit(ACTIONS.JOINED, {
         clients,
         username,
-        socketID: socket.id,
+        socketId: socket.id,
       });
     });
   });
@@ -51,7 +57,7 @@ io.on("connection", (socket) => {
     const rooms = [...socket.rooms];
     rooms.forEach((roomId) => {
       socket.in(roomId).emit(ACTIONS.DISCONNECTED, {
-        socketID: socket.id,
+        socketId: socket.id,
         username: userSocketMap[socket.id],
       });
     });

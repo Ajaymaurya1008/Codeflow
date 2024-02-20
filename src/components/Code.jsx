@@ -14,32 +14,35 @@ const Code = ({ socketRef, roomId,onCodeChange }) => {
   const editorRef = useRef(null);
   useEffect(() => {
     async function init() {
-      editorRef.current = Codemirror.fromTextArea(
-        document.getElementById("realtimeEditor"),
-        {
-          mode: { name: "javascript", json: true },
-          theme: "dracula",
-          autoCloseTags: true,
-          autoCloseBrackets: true,
-          lineNumbers: true,
-        }
-      );
+      if (!editorRef.current) {
+        editorRef.current = Codemirror.fromTextArea(
+          document.getElementById("realtimeEditor"),
+          {
+            mode: { name: "javascript", json: true },
+            theme: "dracula",
+            autoCloseTags: true,
+            autoCloseBrackets: true,
+            lineNumbers: true,
+          }
+        );
 
-      editorRef.current.on("change", (instance, changes) => {
-        const { origin } = changes;
-        const code = instance.getValue();
-        onCodeChange(code);
-        if (origin !== "setValue") {
-          socketRef.current.emit(ACTIONS.CODE_CHANGE, {
-            roomId,
-            code,
-          });
-        }
-      });
+        editorRef.current.on("change", (instance, changes) => {
+          const { origin } = changes;
+          const code = instance.getValue();
+          onCodeChange(code);
+          if (origin !== "setValue") {
+            socketRef.current.emit(ACTIONS.CODE_CHANGE, {
+              roomId,
+              code,
+            });
+          }
+        });
+      }
     }
 
     init();
   }, []);
+
 
   useEffect(() => {
     if (socketRef.current) {
@@ -50,9 +53,11 @@ const Code = ({ socketRef, roomId,onCodeChange }) => {
       });
     }
 
-    // return () => {
-    //   socketRef.current.off(ACTIONS.CODE_CHANGE);
-    // };
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.off(ACTIONS.CODE_CHANGE);
+      }
+    };
     
   }, [socketRef.current]);
 
