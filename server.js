@@ -1,3 +1,5 @@
+// server.js
+
 /* eslint-disable no-undef */
 import express from "express";
 const app = express();
@@ -10,19 +12,23 @@ import path from "path";
 const server = http.createServer(app);
 const io = new Server(server);
 
+// Define the maps here
+const userToSocketMap = {};
+const socketToUserMap = {};
+
 app.use(express.static("build"));
 app.use((req, res, next) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 
-const userSocketMap = {};
+// Your existing code continues...
 
 const getAllConnectedClients = (roomId) => {
   return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map(
     (socketId) => {
       return {
         socketId,
-        username: userSocketMap[socketId],
+        username: socketToUserMap[socketId], // Corrected variable name
       };
     }
   );
@@ -32,7 +38,20 @@ io.on("connection", (socket) => {
   console.log("socket connected", socket.id);
 
   socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
-    userSocketMap[socket.id] = username;
+    // Disconnect previous connection if exists
+    const existingSocketId = userToSocketMap[username];
+    if (existingSocketId && io.sockets.sockets.get(existingSocketId)) {
+      io.to(existingSocketId).emit(
+        "forceDisconnect",
+        "You have logged in from another device."
+      );
+      io.sockets.sockets.get(existingSocketId).disconnect(true);
+    }
+
+    // Update maps with new connection
+    userToSocketMap[username] = socket.id;
+    socketToUserMap[socket.id] = username;
+
     socket.join(roomId);
     const clients = getAllConnectedClients(roomId);
     console.log(clients);
@@ -54,15 +73,19 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnecting", () => {
-    const rooms = [...socket.rooms];
-    rooms.forEach((roomId) => {
-      socket.in(roomId).emit(ACTIONS.DISCONNECTED, {
-        socketId: socket.id,
-        username: userSocketMap[socket.id],
+    const username = socketToUserMap[socket.id];
+    if (username) {
+      const rooms = [...socket.rooms];
+      rooms.forEach((roomId) => {
+        socket.in(roomId).emit(ACTIONS.DISCONNECTED, {
+          socketId: socket.id,
+          username,
+        });
       });
-    });
-    delete userSocketMap[socket.id];
-    socket.leave();
+      // Clean up maps
+      delete userToSocketMap[username];
+      delete socketToUserMap[socket.id];
+    }
   });
 });
 

@@ -51,6 +51,12 @@ const Editor = () => {
         }
       );
 
+      socket.on("forceDisconnect", (message) => {
+        alert(message); // Or handle more gracefully
+        // Optionally, disconnect the client-side socket
+        socket.disconnect();
+      });
+
       // Listening for disconnected
       socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
         if (username !== location.state?.username) {
@@ -64,6 +70,7 @@ const Editor = () => {
     init();
 
     return () => {
+
       if (socketRef.current) {
         socketRef.current.disconnect();
         socketRef.current.off(ACTIONS.JOINED);
