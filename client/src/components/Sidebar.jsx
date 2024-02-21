@@ -31,9 +31,9 @@ const Sidebar = ({ client }) => {
           <div className="h-20 flex items-center justify-center px-8">
             <a className="flex-none">
               <img
-                src="https://assets-global.website-files.com/6390ccac206b2dabb754420e/63971a2dca8d8c5bb2039390_porfolio-bg.svg"
-                width={35}
-                className="mx-auto"
+                src="https://res.cloudinary.com/dp9kpxfpa/image/upload/v1708505208/Blue_and_White_Modern_Letter_C_System_Business_Consulting_Logo_iluawo.png"
+                width={55}
+                className="mx-auto hover:cursor-pointer hover:shadow-none hover:border-none duration-150"
               />
             </a>
           </div>
