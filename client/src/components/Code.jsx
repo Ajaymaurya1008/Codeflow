@@ -23,6 +23,7 @@ const Code = ({ socketRef, roomId,onCodeChange }) => {
             autoCloseTags: true,
             autoCloseBrackets: true,
             lineNumbers: true,
+            lineWrapping: true,
           }
         );
 
@@ -61,7 +62,9 @@ const Code = ({ socketRef, roomId,onCodeChange }) => {
     
   }, [socketRef.current]);
 
-  return <textarea className="resize" id="realtimeEditor"></textarea>;
+
+
+  return <textarea id="realtimeEditor"></textarea>;
 };
 
 export default Code;
