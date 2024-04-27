@@ -1,17 +1,15 @@
 {
   "version": 2,
-  "builds": [{ "src": "vite.config.js", "use": "@vercel/static-build" }],
-  "routes": [{ "src": "/(.*)", "dest": "/" }],
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }],
-  "headers": [
+  "builds": [
     {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        }
-      ]
+      "src": "index.js",
+      "use": "@now/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "index.js"
     }
   ]
 }
