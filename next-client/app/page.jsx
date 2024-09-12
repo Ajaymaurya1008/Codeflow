@@ -1,22 +1,15 @@
-import { v4 } from 'uuid';
+import { v4 } from "uuid";
 
 const Register = async ({ searchParams }) => {
-  const roomId = searchParams.roomId || '';
-
   const onAction = async (formData) => {
-    'use server'
+    "use server";
     const roomId = formData.get("roomId");
     const username = formData.get("username");
     console.log(roomId);
     console.log(username);
-    // Process the form data
-  }
+  };
 
-  const createRoom = async () => {
-    'use server'
-    const newRoomId = v4();
-    return { roomId: newRoomId };
-  }
+  const roomId = v4();
 
   return (
     <main className="w-full h-screen flex flex-col items-center justify-center px-4">
@@ -55,18 +48,6 @@ const Register = async ({ searchParams }) => {
             Join Room
           </button>
         </form>
-        <p className="text-center">
-          {" "}
-          Dont have an invite then{" "}
-          <form action={createRoom}>
-            <button
-              type="submit"
-              className="font-medium text-indigo-600 hover:text-indigo-500"
-            >
-              Create Room
-            </button>
-          </form>
-        </p>
       </div>
     </main>
   );
